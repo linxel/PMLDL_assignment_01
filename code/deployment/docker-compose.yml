@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: mlops_fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../models:/app/models:ro
+    environment:
+      - MODEL_PATH=/app/models/model.joblib
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: mlops_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000/predict
+    depends_on:
+      - api
+    restart: unless-stopped
