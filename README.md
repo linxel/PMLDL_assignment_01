@@ -4,7 +4,7 @@ This repository implements an end-to-end automated MLOps pipeline covering:
 1. **Data Engineering**: Data loading, missing value removal, IQR outlier filtering, and stratified dataset splitting.
 2. **Model Engineering**: Feature scaling via `StandardScaler`, model training with `RandomForestClassifier`, MLflow metric logging, and artifact packaging.
 3. **Deployment**: Docker containerized FastAPI inference endpoint and Streamlit web interface orchestrated with Docker Compose.
-4. **Automation**: Apache Airflow DAG scheduled to run every 5 minutes (`*/5 * * * *`).
+4. **Automation**: Apache Airflow DAG scheduled to run every 5 minutes.
 
 ## Repository Structure
 
