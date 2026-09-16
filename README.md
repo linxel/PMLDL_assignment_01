@@ -57,7 +57,7 @@ docker compose -f code/deployment/docker-compose.yml up -d --build
 Initialize Airflow home directory and start standalone services:
 ```bash
 export AIRFLOW_HOME="$(pwd)/services/airflow"
-airflow db init
+airflow db migrate
 airflow standalone
 ```
 * Access the Airflow UI at `http://localhost:8080`.
@@ -68,4 +68,4 @@ airflow standalone
 * **Streamlit UI**: Navigate to `http://localhost:8501`. Enter floral measurements and click **Make Prediction**.
 * **FastAPI Swagger Docs**: Navigate to `http://localhost:8000/docs`.
 * **FastAPI Health Check**: `http://localhost:8000/health`.
-* **MLflow UI**: Run `mlflow ui` to inspect logged parameters and metrics.
+* **MLflow UI**: Run `mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000` and open `http://localhost:5000` to inspect logged parameters and metrics.

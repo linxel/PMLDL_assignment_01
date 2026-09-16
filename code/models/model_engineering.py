@@ -6,9 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-
+import os
+os.environ.setdefault("MLFLOW_ALLOW_FILE_STORE", "true")
 
 def run_model_engineering():
     base_dir = Path(__file__).resolve().parents[2]
@@ -25,7 +24,7 @@ def run_model_engineering():
     x_train, y_train = train_df[features], train_df[target]
     x_test, y_test = test_df[features], test_df[target]
 
-    mlflow.set_tracking_uri((base_dir / "mlruns").as_uri())
+    mlflow.set_tracking_uri(f"sqlite:///{base_dir / 'mlflow.db'}")
     mlflow.set_experiment("iris_training_pipeline")
     with mlflow.start_run():
         pipeline = Pipeline([
@@ -34,18 +33,18 @@ def run_model_engineering():
         ])
         pipeline.fit(x_train, y_train)
 
-    predictions = pipeline.predict(x_test)
-    acc = accuracy_score(y_test, predictions)
-    f1 = f1_score(y_test, predictions, average="weighted")
+        predictions = pipeline.predict(x_test)
+        acc = accuracy_score(y_test, predictions)
+        f1 = f1_score(y_test, predictions, average="weighted")
 
-    mlflow.log_param("n_estimators", 20)
-    mlflow.log_metric("accuracy", float(acc))
-    mlflow.log_metric("f1_weighted", float(f1))
+        mlflow.log_param("n_estimators", 20)
+        mlflow.log_metric("accuracy", float(acc))
+        mlflow.log_metric("f1_weighted", float(f1))
 
-    # Model packaging
-    model_artifact_path = models_dir / "model.joblib"
-    joblib.dump(pipeline, model_artifact_path)
-    mlflow.log_artifact(str(model_artifact_path))
+        # Model packaging
+        model_artifact_path = models_dir / "model.joblib"
+        joblib.dump(pipeline, model_artifact_path)
+        mlflow.log_artifact(str(model_artifact_path))
 
 
 if __name__ == "__main__":
