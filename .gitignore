@@ -16,5 +16,5 @@ services/airflow/webserver_config.py
 .DS_Store
 .yavcp/
 services/airflow/simple_auth_manager_passwords.json.generated
-data/processed/
+# data/processed/
 models/*.joblib
